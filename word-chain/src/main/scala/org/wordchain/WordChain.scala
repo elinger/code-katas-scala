@@ -131,6 +131,8 @@ object WordChain {
     prettyPrint("rogue", "peach")
     prettyPrint("java", "null")
     prettyPrint("null", "java")
+    prettyPrint("duck", "ruby")
+    prettyPrint("ruby", "duck")
   }
 
 }
