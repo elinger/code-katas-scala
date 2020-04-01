@@ -104,11 +104,11 @@ object WordChain {
     paths(initPaths)
   }
 
-  def measureTime[T](block: => T): (T, Long) = {
+  def measureTime[T](block: => T): (T, Double) = {
     val t0     = System.nanoTime()
     val result = block
     val t1     = System.nanoTime()
-    (result, (t1 - t0) / 1000000)
+    (result, (t1 - t0) / 1000000.0)
   }
 
   def prettyPrint(s: String, e: String) {
@@ -133,6 +133,10 @@ object WordChain {
     prettyPrint("null", "java")
     prettyPrint("duck", "ruby")
     prettyPrint("ruby", "duck")
+    prettyPrint("null", "func")
+    prettyPrint("func", "null")
+    prettyPrint("rust", "java")
+    prettyPrint("java", "rust")
   }
 
 }
