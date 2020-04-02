@@ -12,3 +12,4 @@ lazy val commonSettings = Seq(
 
 lazy val `word-chain` = (project in file("word-chain"))
   .settings(commonSettings)
+  .enablePlugins(GraalVMNativeImagePlugin)
