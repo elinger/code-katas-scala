@@ -1,6 +1,5 @@
 package org.wordchain
 
-import java.io.File
 import java.util.Comparator
 
 import scala.annotation.tailrec
@@ -16,10 +15,26 @@ object WordChainAStar {
     * @param parent
     * @param word
     * @param g distance from start
-    * @param h heuristic (distance to end)
+    * @param h heuristic (estimated distance to end)
     */
   case class Node(parent: Option[Node], word: String, g: Int, h: Int, f: Int)
 
+  /**
+   * Will be used to find neighbours of a word. Trackers will be used as keys in a multimap, whereby
+   * values will be HashSets containing words.
+   *
+   * E.g., for neighbours of the word dog the following entries will be created:
+   * Tracker("", "og") -> HashSet(.., "cog", ...)
+   * Tracker("d", "g") -> HashSet(..., "deg", ...)
+   * Tracker("do", "") -> HashSet(...)
+   *
+   * This enables to quickly find neighbours of a word. The number of a trackers per word is equal to the length of the word.
+   * Two neighbours have common tracker.
+   * Time needed to build a multimap (Tracker -> HashSet[String]) depends on the number of words and their length (n * length).
+   * The name tracker is just some name. I couldn't come up with a better name.
+   * @param lhs
+   * @param rhs
+   */
   case class Tracker(lhs: String, rhs: String)
 
   def trackers(word: String): Seq[Tracker] =
@@ -46,6 +61,12 @@ object WordChainAStar {
    (w1 zip w2).count(t => t._1 != t._2)
   }
 
+  /**
+   * Not exactly a graph, but it helps discover node's neighbours quickly. See documentation of case class Tracker.
+   * @param s
+   * @param e
+   * @return
+   */
   def prepareGraph(s: String, e: String): MultiMap[Tracker, String]= {
     val graph = new HashMap[Tracker, Set[String]] with MultiMap[Tracker, String]
     val handleWord: String => Unit =  w => trackers(w).foreach(graph.addBinding(_, w))
@@ -55,8 +76,7 @@ object WordChainAStar {
   }
 
   def loadWords(len: Int, handleWord: String => Unit): Unit = {
-    val file = new File(getClass.getClassLoader.getResource("words.txt").getPath)
-      Using(Source.fromFile(file)) { source =>
+      Using(Source.fromResource("words.txt")) { source =>
         source.getLines()
           .filter(w => w.length == len)
           .foreach(handleWord)

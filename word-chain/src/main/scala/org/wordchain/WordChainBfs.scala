@@ -1,11 +1,11 @@
 package org.wordchain
 
 import scala.collection.mutable
-import scala.collection.mutable.{Map => MMap}
+import scala.collection.mutable.{ Map => MMap }
 import scala.io.Source
-import scala.util.{Failure, Success, Using}
+import scala.util.{ Failure, Success, Using }
 
-object WordChain {
+object WordChainBfs {
 
   def loadWords(start: String, end: String): List[String] = {
     val len = start.length
@@ -126,17 +126,17 @@ object WordChain {
     println(s"Done in $timeFindPath ms \n")
   }
 
-//  def main(args: Array[String]): Unit = {
-//    println()
-//    prettyPrint("rogue", "peach")
-//   // prettyPrint("dog", "cat")
-//   // prettyPrint("cat", "dog")
-//   // prettyPrint("peach", "rogue")
-//   // prettyPrint("rogue", "peach")
-//   // prettyPrint("java", "null")
-//   // prettyPrint("null", "java")
-//   // prettyPrint("duck", "ruby")
-//   // prettyPrint("ruby", "duck")
-//  }
+  def main(args: Array[String]): Unit = {
+    println()
+    prettyPrint("rogue", "peach")
+    prettyPrint("dog", "cat")
+    prettyPrint("cat", "dog")
+    prettyPrint("peach", "rogue")
+    prettyPrint("rogue", "peach")
+    prettyPrint("java", "null")
+    prettyPrint("null", "java")
+    prettyPrint("duck", "ruby")
+    prettyPrint("ruby", "duck")
+  }
 
 }
