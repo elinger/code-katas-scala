@@ -19,21 +19,31 @@ object WordChainAStar {
     */
   case class Node(parent: Option[Node], word: String, g: Int, h: Int, f: Int) {
 
-    override def hashCode(): Int = word.hashCode
+   // override def hashCode(): Int = word.hashCode
 
-    override def equals(obj: Any): Boolean =
-      obj match {
-        case node: Node => node.word == this.word
-        case _ => false
-      }
+   // override def equals(obj: Any): Boolean =
+   //   obj match {
+   //     case node: Node => node.word == this.word
+   //     case _ => false
+   //   }
   }
+
+  case class Tracker(lhs: String, rhs: String)
+
+  def trackers(word: String): Seq[Tracker] =
+    (0 until word.length).map(
+      i =>
+        Tracker(
+          word.substring(0, i),
+          word.substring(i + 1, word.length)
+      )
+    )
 
   // how to break ties, compare g!
   object MinComparator extends Comparator[Node] {
     override def compare(x: Node, y: Node): Int = {
       var r = x.f compare y.f
       if (r == 0) {
-        // x.h compare y.h
         r = -(x.g compare y.g)
       }
       r
@@ -50,27 +60,22 @@ object WordChainAStar {
     count
   }
 
-  def buildGraph(words: List[String]): MultiMap[String, String] = {
-    val graphMultimap = new HashMap[String, Set[String]] with MultiMap[String, String]
-    for {
-      w1 <- words
-      w2 <- words
-      if countDiffChars(w1, w2) == 1 && w1 != w2
-    } {
-      graphMultimap.addBinding(w1, w2)
-      graphMultimap.addBinding(w2, w1)
-    }
+  def buildGraph(words: List[String]): MultiMap[Tracker, String] = {
+    val graphMultimap = new HashMap[Tracker, Set[String]] with MultiMap[Tracker, String]
+
+    words.foreach(w => trackers(w).foreach(graphMultimap.addBinding(_, w)))
     graphMultimap
   }
 
   def loadWords(start: String, end: String): List[String] = {
     val len = start.length
-    val maybeWords = Using(Source.fromResource("words.txt")) { source =>
-      source.getLines
-      //.filter(w => w.length == len && w != start && w != end)
-        .filter(w => w.length == len)
-        .toList
-    }
+    val maybeWords =
+      Using(Source.fromResource("words.txt")) { source =>
+        source.getLines
+        //.filter(w => w.length == len && w != start && w != end)
+          .filter(w => w.length == len)
+          .toList
+      }
 
     maybeWords match {
       case Success(words) => words
@@ -81,12 +86,11 @@ object WordChainAStar {
   }
 
   def shortestPath(start: String, end: String, words: List[String]): List[String] = {
-    val (graph, time)     = measureTime(buildGraph(words))
+    val (graph, time) = measureTime(buildGraph(words))
     println(s"Build graph took $time ms")
     val minHeap   = new java.util.PriorityQueue[Node](MinComparator)
     val startNode = Node(None, start, 0, 0, 0)
 
-    // TODO turn into hash set
     val closedSet = mutable.HashSet[String]()
     val openSet   = mutable.HashMap[String, Node]()
 
@@ -142,9 +146,10 @@ object WordChainAStar {
       sPath
     }
 
-    def nodeNeighbours(graph: mutable.MultiMap[String, String], parent: Node): Iterable[Node] =
-      graph.getOrElse(parent.word, List())
-      .filterNot(closedSet.contains)
+    def nodeNeighbours(graph: mutable.MultiMap[Tracker, String], parent: Node): Iterable[Node] =
+      trackers(parent.word)
+        .flatMap(graph.getOrElse(_, List()))
+        .filterNot(closedSet.contains)
         .map(word => {
           val g = parent.g + 1
           val h = countDiffChars(word, end)
@@ -178,8 +183,6 @@ object WordChainAStar {
   }
 
   def main(args: Array[String]): Unit = {
-    //println()
-    //(1 to 10).foreach(_ => prettyPrint("peach", "rogue"))
     prettyPrint("dog", "cat")
     prettyPrint("cat", "dog")
     prettyPrint("peach", "rogue")
