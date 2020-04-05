@@ -1,11 +1,11 @@
 package org.wordchain
 
 import scala.collection.mutable
-import scala.collection.mutable.{Map => MMap}
+import scala.collection.mutable.{ Map => MMap }
 import scala.io.Source
-import scala.util.{Failure, Success, Using}
+import scala.util.{ Failure, Success, Using }
 
-object WordChain {
+object WordChainBfs {
 
   def loadWords(start: String, end: String): List[String] = {
     val len = start.length
@@ -44,7 +44,7 @@ object WordChain {
 
     def isDiffOne(w1: String, w2: String): Boolean = {
       var count = 0
-      var i     = 0;
+      var i     = 0
       while (i < wordLength && count < 2) {
         if (w1(i) != w2(i)) count = count + 1
         i = i + 1
@@ -81,7 +81,9 @@ object WordChain {
 
     import scala.annotation.tailrec
     @tailrec
-    def paths(cPaths: List[List[String]]): List[List[String]] = {
+    def paths(cPaths: List[List[String]], it: Int): List[List[String]] = {
+      if (it % 10 == 0)
+        println(s"It $it")
       // valid paths
       val vPaths = for { path <- cPaths if isValid(start, path) } yield start :: path
 
@@ -91,7 +93,8 @@ object WordChain {
           val nPaths = calcNewPaths(cPaths)
           nPaths match {
             case List() => List(List())
-            case newPaths: List[List[String]] => paths(newPaths)
+            case newPaths: List[List[String]] =>
+              paths(newPaths, it + 1)
           }
         case validPaths: List[List[String]] => validPaths
       }
@@ -101,7 +104,7 @@ object WordChain {
     val initPaths: List[List[String]] = List(List(end))
     seenWords += start
     seenWords += end
-    paths(initPaths)
+    paths(initPaths, 1)
   }
 
   def measureTime[T](block: => T): (T, Double) = {
@@ -125,6 +128,7 @@ object WordChain {
 
   def main(args: Array[String]): Unit = {
     println()
+    prettyPrint("rogue", "peach")
     prettyPrint("dog", "cat")
     prettyPrint("cat", "dog")
     prettyPrint("peach", "rogue")
