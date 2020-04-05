@@ -6,6 +6,7 @@ import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.io.Source
 import scala.util.{ Failure, Success, Using }
+import collection.mutable.{ HashMap, MultiMap, Set }
 
 object WordChainAStar {
 
@@ -39,11 +40,34 @@ object WordChainAStar {
     }
   }
 
+  def countDiffChars(w1: String, w2: String): Int = {
+    var count = 0
+    var i     = 0
+    while (i < w1.length) {
+      if (w1(i) != w2(i)) count = count + 1
+      i = i + 1
+    }
+    count
+  }
+
+  def buildGraph(words: List[String]): MultiMap[String, String] = {
+    val graphMultimap = new HashMap[String, Set[String]] with MultiMap[String, String]
+    for {
+      w1 <- words
+      w2 <- words
+      if countDiffChars(w1, w2) == 1 && w1 != w2
+    } {
+      graphMultimap.addBinding(w1, w2)
+      graphMultimap.addBinding(w2, w1)
+    }
+    graphMultimap
+  }
+
   def loadWords(start: String, end: String): List[String] = {
     val len = start.length
     val maybeWords = Using(Source.fromResource("words.txt")) { source =>
       source.getLines
-        //.filter(w => w.length == len && w != start && w != end)
+      //.filter(w => w.length == len && w != start && w != end)
         .filter(w => w.length == len)
         .toList
     }
@@ -57,18 +81,8 @@ object WordChainAStar {
   }
 
   def shortestPath(start: String, end: String, words: List[String]): List[String] = {
-    val wordLength = start.length
-
-    def countDiffChars(w1: String, w2: String): Int = {
-      var count = 0
-      var i     = 0
-      while (i < wordLength) {
-        if (w1(i) != w2(i)) count = count + 1
-        i = i + 1
-      }
-      count
-    }
-
+    val (graph, time)     = measureTime(buildGraph(words))
+    println(s"Build graph took $time ms")
     val minHeap   = new java.util.PriorityQueue[Node](MinComparator)
     val startNode = Node(None, start, 0, 0, 0)
 
@@ -83,11 +97,6 @@ object WordChainAStar {
       var numOfIt = 0
       while (!success && !minHeap.isEmpty) {
         numOfIt += 1
-        //if (numOfIt % 10 == 0) {
-        //  println(s"It: $numOfIt")
-        //  minHeap.stream().limit(10).forEach(n => print(s"${n.word} g:${n.g} h:${n.h} f:${n.f}\t"))
-        //  println()
-        //}
         val node = minHeap.poll()
         //println(node)
         if (node.word == end) {
@@ -110,7 +119,7 @@ object WordChainAStar {
           openSet.remove(node.word)
           closedSet.add(node.word)
           // lets first update node's neighbours
-          val neighbours = nodeNeighbours(node)
+          val neighbours = nodeNeighbours(graph, node)
           neighbours.foreach(n => {
             val maybeNode = openSet.get(n.word)
             maybeNode match {
@@ -133,9 +142,9 @@ object WordChainAStar {
       sPath
     }
 
-    def nodeNeighbours(parent: Node): Iterable[Node] =
-      openSet.keys
-        .filter(countDiffChars(parent.word, _) == 1)
+    def nodeNeighbours(graph: mutable.MultiMap[String, String], parent: Node): Iterable[Node] =
+      graph.getOrElse(parent.word, List())
+      .filterNot(closedSet.contains)
         .map(word => {
           val g = parent.g + 1
           val h = countDiffChars(word, end)
@@ -144,7 +153,9 @@ object WordChainAStar {
 
     minHeap.add(startNode)
     openSet.addAll(words.map(w => (w, Node(None, w, Int.MaxValue, Int.MaxValue, Int.MaxValue))))
-    findShortestPath()
+    val (shortestPath, fspTime) = measureTime(findShortestPath())
+    println(s"Find shortest path took $fspTime ms")
+    shortestPath
   }
 
   def measureTime[T](block: => T): (T, Double) = {
