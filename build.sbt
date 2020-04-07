@@ -13,3 +13,7 @@ lazy val commonSettings = Seq(
 lazy val `word-chain` = (project in file("word-chain"))
   .settings(commonSettings)
   .enablePlugins(GraalVMNativeImagePlugin)
+
+lazy val `the-knight-tour` = (project in file("the-knight-tour"))
+  .settings(commonSettings)
+  .enablePlugins(GraalVMNativeImagePlugin)
