@@ -5,16 +5,16 @@ This repository is a collection of some code-katas solved with Scala. The collec
 |                        Code-Kata                                    |
 |:--------------------------------------------------------------------|
 | [Word chain](word-chain/README.md)                                  |
+| [The Knight's tour](the-knight-tour/README.md)                      |
 
 
 ## How to run
 To run the project you will need Scala and SBT which is a build tool for scala.
 
-
+### Example
 To run the project `word-chain` execute the following command:
 
 ```sbt "project word-chain" "run"```
-
 
 Or:
 * First run:

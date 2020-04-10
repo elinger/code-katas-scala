@@ -64,22 +64,7 @@ object KnightTour {
     findToursHelper(Pos(sX, sY), List(Pos(sX, sY)), board, 1)
   }
 
-  def main(args: Array[String]): Unit = {
-    val size  = 5
-    val start = System.currentTimeMillis()
-    println(s"Board size: $size")
-    // define different starting position here
-    val tours      = findTours(0, 0, size)
-    val numOfTours = tours.length
-    println(s"Total num of tours: $numOfTours")
-
-    val end = System.currentTimeMillis()
-    println(s"Time: ${end - start} ms")
-
-
-    // let print the moves of one tour
-    val aTour = tours.headOption.map(_.reverse)
-
+  def printMoves(size: Int, tour: List[Pos]): Unit = {
     val board = Array.tabulate[String](size + 1, size + 1){
       (x, y) =>
         if (x == 0) "_" + y.toString
@@ -87,15 +72,32 @@ object KnightTour {
         else "  "}
 
     var counter = 1
-    aTour.foreach(l => {
-      l.foreach(pos => {
-        board(pos.x + 1)(pos.y +1) = f"$counter%02d"
+    tour.foreach(pos => {
+        println(s"Move: $counter")
+        board(pos.x + 1)(pos.y +1) = f"$counter%2d"
         val boardS = board.map(_.mkString("  ")).mkString("\n")
         println(boardS)
         counter = counter + 1
         println("\n\n")
-      })
     })
+  }
+
+  def main(args: Array[String]): Unit = {
+    val size  = 5
+    val start = System.currentTimeMillis()
+    println(s"Board size: $size")
+    // define different starting position here
+    val tours      = findTours(0, 2, size)
+    val numOfTours = tours.length
+    println(s"Total num of tours: $numOfTours")
+
+    val end = System.currentTimeMillis()
+    println(s"Time: ${end - start} ms\n\n")
+
+    // let print the moves of one tour
+    val maybeTour = tours.headOption.map(_.reverse)
+    maybeTour.foreach(tour =>
+      printMoves(size, tour))
   }
 
 }
