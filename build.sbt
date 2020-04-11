@@ -17,3 +17,7 @@ lazy val `word-chain` = (project in file("word-chain"))
 lazy val `the-knight-tour` = (project in file("the-knight-tour"))
   .settings(commonSettings)
   .enablePlugins(GraalVMNativeImagePlugin)
+
+lazy val `roman-numerals` = (project in file("roman-numerals"))
+  .settings(commonSettings)
+  .enablePlugins(GraalVMNativeImagePlugin)
