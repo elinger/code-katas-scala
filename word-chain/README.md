@@ -41,3 +41,5 @@ at one position)
 
 The graph is built beforehand. Check documentation in the code for more details.
 
+Problem descriptions by [mwttg](https://github.com/mwttg/code-katas-scala/tree/master/kata_2020-01-word-chain/readme.md).
+

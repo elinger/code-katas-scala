@@ -2,7 +2,7 @@ package com.elinger
 
 object RomanNumerals {
 
-  val MapToRoman = Map(
+  val Romans = Map(
     1000 -> 'M',
     500 -> 'D',
     100 -> 'C',
@@ -12,7 +12,7 @@ object RomanNumerals {
     1 -> 'I'
   )
 
-  val MapToArabic = Map(
+  val Arabics = Map(
     'M' -> 1000,
     'D' -> 500,
     'C' -> 100,
@@ -31,13 +31,13 @@ object RomanNumerals {
 
         whole match {
           case w if w < 4 =>
-            List.fill[Char](w)(MapToRoman(base)) ::: helper(rest, base10)
+            List.fill[Char](w)(Romans(base)) ::: helper(rest, base10)
           case w if w >= 4 && w < 5 =>
-            List(MapToRoman(base), MapToRoman(5 * base)) ::: helper(rest, base10)
+            List(Romans(base), Romans(5 * base)) ::: helper(rest, base10)
           case w if w >= 5 && w < 9 =>
-            List(MapToRoman(5 * base)) ::: helper(number - 5 * base, base)
+            List(Romans(5 * base)) ::: helper(number - 5 * base, base)
           case _ =>
-            List(MapToRoman(base), MapToRoman(10 * base)) ::: helper(rest, base10)
+            List(Romans(base), Romans(10 * base)) ::: helper(rest, base10)
         }
       } else List[Char]()
 
@@ -45,18 +45,16 @@ object RomanNumerals {
   }
 
   def toArabicNumber(romanNumber: String): Int = {
-    def value(index: Int, chars: List[Char]): Int =
-      // for cases like IV and similar, add to the sum on I encounter and do nothing (0) on V
-      if (index >= 1 && MapToArabic(chars(index)) > MapToArabic(chars(index - 1))) {
-        0
-      } else if (index < chars.size - 1 && MapToArabic(chars(index)) < MapToArabic(chars(index + 1))) {
-        MapToArabic(chars(index + 1)) - MapToArabic(chars(index))
-      } else {
-        MapToArabic(chars(index))
-      }
-
-    val chars = romanNumber.toList
-    chars.zipWithIndex.map(c => value(c._2, chars)).sum
+    def toArabicHelper(number: List[Char]): Int =
+      number match {
+        case List() => 0
+        case List(el) => Arabics(el)
+        case first :: second :: rest if Arabics(first) < Arabics(second) =>
+          - Arabics(first) + toArabicHelper(second :: rest) // subtract the value (e.g. if XC = (first, second) => -10)
+        case first :: second :: rest if Arabics(first) >= Arabics(second) =>
+          Arabics(first) + toArabicHelper(second :: rest)
+    }
+    toArabicHelper(romanNumber.toList)
   }
 
   def main(args: Array[String]): Unit = {
