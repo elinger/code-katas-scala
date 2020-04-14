@@ -7,15 +7,10 @@ object KnightTour {
    */
   case class Pos(x: Int, y: Int)
 
-  def createBoard(size: Int): Array[Array[Boolean]] = Array.fill[Boolean](size, size)(false)
-
-  def copy(input: Array[Array[Boolean]]): Array[Array[Boolean]] =
-    input.map(_.map(x => x))
-
   def findTours(sX: Int, sY: Int, size: Int): List[List[Pos]] = {
 
-    def extendTour(pos: Pos, path: List[Pos], board: Array[Array[Boolean]]): Option[List[Pos]] =
-      if (pos.x < size && pos.y < size && pos.x >= 0 && pos.y >= 0 && !board(pos.x)(pos.y))
+    def extendTour(pos: Pos, path: List[Pos], takenPositions: Set[Pos]): Option[List[Pos]] =
+      if (pos.x < size && pos.y < size && pos.x >= 0 && pos.y >= 0 && !takenPositions.contains(pos))
         Some(pos :: path)
       else
         None
@@ -24,11 +19,11 @@ object KnightTour {
      *
      * @param lastPos last position in the tour
      * @param cTour current tour expressed as a sequence of positions
-     * @param board to keep track of used positions so far in the tour
+     * @param takenPositions to keep track of used positions so far in the tour
      * @param tourLength so far
      * @return
      */
-    def findToursHelper(lastPos: Pos, cTour: List[Pos], board: Array[Array[Boolean]], tourLength: Int): List[List[Pos]] = {
+    def findToursHelper(lastPos: Pos, cTour: List[Pos], takenPositions: Set[Pos], tourLength: Int): List[List[Pos]] = {
       val nextPositions = for {
         (i, j) <- List(
           (-1, -2),
@@ -43,25 +38,22 @@ object KnightTour {
       } yield Pos(lastPos.x + i, lastPos.y + j)
 
       // extend and keep only tours which are extended
-      val newTours = nextPositions.flatMap(p => extendTour(p, cTour, board))
+      val newTours = nextPositions.flatMap(p => extendTour(p, cTour, takenPositions))
 
       val contTours = newTours.flatMap(tour => {
-        val newBoard = copy(board)
-        val addedPos  = tour.head
-        newBoard(addedPos.x)(addedPos.y) = true
         val newToursLength = tourLength + 1
-        if (newToursLength < (size * size))
-          findToursHelper(tour.head, tour, newBoard, newToursLength)
-        else
+        if (tourLength + 1 < (size * size)) {
+          val addedPos  = tour.head
+          findToursHelper(tour.head, tour, takenPositions + addedPos , newToursLength)
+        } else
           List(tour)
       })
 
       contTours
     }
 
-    val board = createBoard(size)
-    board(sX)(sY) = true
-    findToursHelper(Pos(sX, sY), List(Pos(sX, sY)), board, 1)
+    val takenPositions = Set[Pos](Pos(sX, sY))
+    findToursHelper(Pos(sX, sY), List(Pos(sX, sY)), takenPositions, 1)
   }
 
   def printMoves(size: Int, tour: List[Pos]): Unit = {
