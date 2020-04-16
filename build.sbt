@@ -21,3 +21,7 @@ lazy val `the-knight-tour` = (project in file("the-knight-tour"))
 lazy val `roman-numerals` = (project in file("roman-numerals"))
   .settings(commonSettings)
   .enablePlugins(GraalVMNativeImagePlugin)
+
+lazy val `magic-forest` = (project in file("magic-forest"))
+  .settings(commonSettings)
+  .enablePlugins(GraalVMNativeImagePlugin)

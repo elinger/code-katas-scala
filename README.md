@@ -7,6 +7,7 @@ This repository is a collection of some code-katas solved with Scala. The collec
 | [Word chain](word-chain/README.md)                                  |
 | [The Knight's tour](the-knight-tour/README.md)                      |
 | [Roman numerals](roman-numerals/README.md)                          |
+| [Magic forest](magic-forest/README.md)                              |
 
 
 ## How to run
