@@ -25,3 +25,7 @@ lazy val `roman-numerals` = (project in file("roman-numerals"))
 lazy val `magic-forest` = (project in file("magic-forest"))
   .settings(commonSettings)
   .enablePlugins(GraalVMNativeImagePlugin)
+
+
+lazy val `i-before-e-except-after-c` = (project in file("i-before-e-except-after-c"))
+  .settings(commonSettings)
