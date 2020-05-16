@@ -4,22 +4,34 @@ import scala.io.Source
 
 object IBeforeEExceptAfterC {
 
-  case class Accumulator(ie: Int, cei: Int, ei: Int, cie: Int) {
+  case class Word(w: String, frequency: Int)
+
+  case class Counter(ie: Int, cei: Int, ei: Int, cie: Int) {
+
+    def *(constant: Int):Counter = {
+      Counter(constant * ie, constant * cei, constant * ei, constant * cie)
+    }
+
+    def +(that: Counter):Counter = {
+      Counter(ie + that.ie, cei + that.cei, ei + that.ei, cie + that.cie)
+    }
+
     def prettyString(): String =
       s"""ie=${this.ie} cie=${this.cie} cei=${this.cei} ei=${this.ei}
       |The first sentence 'ie > 2 * cie' is ${this.ie > 2 * this.cie}
       |The second sentence 'cei > 2 * ei' is ${this.cei > 2 * this.ei}""".stripMargin
   }
 
-  def handle(wordList: List[String]): Accumulator =
-    wordList.foldLeft(Accumulator(0, 0, 0, 0)) { (acc, word) =>
-      val wordCheck = checkWord(word)
-      Accumulator(
-        ie  = acc.ie + wordCheck.ie,
-        cei = acc.cei + wordCheck.cei,
-        ei  = acc.ei + wordCheck.ei,
-        cie = acc.cie + wordCheck.cie
+  def handle(wordList: List[Word]): Counter =
+    wordList.foldLeft(Counter(0, 0, 0, 0)) { (acc, word) =>
+      val wordCheck = checkWord(word.w)
+      val counter = Counter(
+        ie  = wordCheck.ie,
+        cei = wordCheck.cei,
+        ei  = wordCheck.ei,
+        cie = wordCheck.cie
       )
+      acc + (counter * word.frequency)
     }
 
   private def checkWord(word: String) = {
@@ -41,19 +53,17 @@ object IBeforeEExceptAfterC {
       c.toUpper match {
         case 'E' =>
           a match {
-            case Acc(None, Some('I'), _, _, _, _) => a.copy(pp = Some('I'), p = Some('E'), ie = 1)
             case Acc(Some('C'), Some('I'), _, _, _, _) => a.copy(pp = Some('I'), p = Some('E'), cie = 1)
-            case Acc(Some(_), Some('I'), _, _, _, _) => a.copy(pp = Some('I'), p = Some('E'), ie = 1)
+            case Acc(_, Some('I'), _, _, _, _) => a.copy(pp = Some('I'), p = Some('E'), ie = 1)
             case Acc(_, p, _, _, _, _) => a.copy(pp = p, p = Some('E'))
           }
         case 'I' =>
           a match {
-            case Acc(None, Some('E'), _, _, _, _) => a.copy(pp = Some('E'), p = Some('I'), ei = 1)
             case Acc(Some('C'), Some('E'), _, _, _, _) => a.copy(pp = Some('E'), p = Some('I'), cei = 1)
-            case Acc(Some(_), Some('E'), _, _, _, _)  => a.copy(pp = Some('E'), p = Some('I'), ei = 1)
+            case Acc(_, Some('E'), _, _, _, _)  => a.copy(pp = Some('E'), p = Some('I'), ei = 1)
             case Acc(_, p, _, _, _, _) => a.copy(pp = p, p = Some('I'))
           }
-        case c => a.copy(pp = a.p, Some(c))
+        case c => a.copy(pp = a.p, p = Some(c))
       }
       // format: on
       }
@@ -61,9 +71,22 @@ object IBeforeEExceptAfterC {
   }
 
   def main(arg: Array[String]): Unit = {
-    val wordList = Source.fromResource("unixdict.txt").getLines().toList
-    val counter  = handle(wordList)
-    println(counter.prettyString())
+    val wordList = Source.fromResource("unixdict.txt")
+      .getLines()
+      .map(l => Word(l, 1))
+      .toList
+    val counter1  = handle(wordList)
+    println(counter1.prettyString())
+
+
+    val wordWithFrequenciesList = Source.fromResource("words-with-frequencies.txt")
+      .getLines()
+      .drop(1)
+      .map(line => line.trim().split("\t"))
+      .map(ls => Word(ls(0), ls(2).toInt))
+      .toList
+    val counter2  = handle(wordWithFrequenciesList)
+    println(counter2.prettyString())
   }
 
 }
