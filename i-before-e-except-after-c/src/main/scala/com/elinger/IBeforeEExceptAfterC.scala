@@ -22,7 +22,7 @@ object IBeforeEExceptAfterC {
       |The second sentence 'cei > 2 * ei' is ${this.cei > 2 * this.ei}""".stripMargin
   }
 
-  def handle(wordList: List[Word]): Counter =
+  def inspect(wordList: List[Word]): Counter =
     wordList.foldLeft(Counter(0, 0, 0, 0)) { (acc, word) =>
       val wordCheck = checkWord(word.w)
       val counter = Counter(
@@ -75,7 +75,7 @@ object IBeforeEExceptAfterC {
       .getLines()
       .map(l => Word(l, 1))
       .toList
-    val counter1  = handle(wordList)
+    val counter1  = inspect(wordList)
     println(counter1.prettyString())
 
 
@@ -85,7 +85,7 @@ object IBeforeEExceptAfterC {
       .map(line => line.trim().split("\t"))
       .map(ls => Word(ls(0), ls(2).toInt))
       .toList
-    val counter2  = handle(wordWithFrequenciesList)
+    val counter2  = inspect(wordWithFrequenciesList)
     println(counter2.prettyString())
   }
 
