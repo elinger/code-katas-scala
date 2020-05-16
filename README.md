@@ -8,6 +8,7 @@ This repository is a collection of some code-katas solved with Scala. The collec
 | [The Knight's tour](the-knight-tour/README.md)                      |
 | [Roman numerals](roman-numerals/README.md)                          |
 | [Magic forest](magic-forest/README.md)                              |
+| [I before E except after C](i-before-e-except-after-c/README.md)    |
 
 
 ## How to run
