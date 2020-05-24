@@ -25,13 +25,18 @@ object IBeforeEExceptAfterC {
     implicit def boolToInt(b: Boolean): Int = if (b) 1 else 0
 
     wordList.foldLeft(Counter(0, 0, 0, 0)) { (acc, word) =>
-      val counter = Counter(
-        ie  = word.w.contains("ie"),
-        cei = word.w.contains("cei"),
-        ei  = word.w.contains("ei"),
-        cie = word.w.contains("cie")
-      )
-      acc + (counter * word.frequency)
+      val w = word.w
+      val isIe = w.contains("ie")
+      val isCei = w.contains("cei")
+      val isEi = w.contains("ei")
+      val isCie = w.contains("cie")
+        val counter = Counter(
+          ie  = isIe && !isCie,
+          cei = isCei,
+          ei  = isEi && !isCei,
+          cie = isCie
+        )
+        acc + (counter * word.frequency)
     }
   }
 
@@ -48,6 +53,7 @@ object IBeforeEExceptAfterC {
       println(counter1.prettyString())
     }
 
+    println()
     time {
       val wordWithFrequenciesList = Source
         .fromResource("words-with-frequencies.txt")
