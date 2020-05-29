@@ -25,18 +25,19 @@ object IBeforeEExceptAfterC {
     implicit def boolToInt(b: Boolean): Int = if (b) 1 else 0
 
     wordList.foldLeft(Counter(0, 0, 0, 0)) { (acc, word) =>
-      val w = word.w
-      val isIe = w.contains("ie")
+      val w     = word.w
+      val isIe  = w.contains("ie")
       val isCei = w.contains("cei")
-      val isEi = w.contains("ei")
+      val isEi  = w.contains("ei")
       val isCie = w.contains("cie")
-        val counter = Counter(
-          ie  = isIe && !isCie,
-          cei = isCei,
-          ei  = isEi && !isCei,
-          cie = isCie
-        )
-        acc + (counter * word.frequency)
+
+      val counter = Counter(
+        ie  = isIe && !isCie,
+        cei = isCei,
+        ei  = isEi && !isCei,
+        cie = isCie
+      )
+      acc + (counter * word.frequency)
     }
   }
 
