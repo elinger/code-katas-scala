@@ -22,19 +22,25 @@ object IBeforeEExceptAfterC {
 
   def inspect(wordList: List[Word]): Counter = {
 
-    implicit def boolToInt(b: Boolean): Int = if (b) 1 else 0
+    def checkIfFirstOtherwiseCheckIfSecond(w: String, s1: String, s2: String) =
+      if (w.contains(s1))
+        (true, false)
+      else if (w.contains(s2))
+        (false, true)
+      else
+        (false, false)
 
     wordList.foldLeft(Counter(0, 0, 0, 0)) { (acc, word) =>
       val w     = word.w
-      val isIe  = w.contains("ie")
-      val isCei = w.contains("cei")
-      val isEi  = w.contains("ei")
-      val isCie = w.contains("cie")
 
+      val (isCei, isEi) = checkIfFirstOtherwiseCheckIfSecond(w, "cei", "ei")
+      val (isCie, isIe) = checkIfFirstOtherwiseCheckIfSecond(w, "cie", "ie")
+
+      implicit def boolToInt(b: Boolean): Int = if (b) 1 else 0
       val counter = Counter(
-        ie  = isIe && !isCie,
+        ie  = isIe,
         cei = isCei,
-        ei  = isEi && !isCei,
+        ei  = isEi,
         cie = isCie
       )
       acc + (counter * word.frequency)
