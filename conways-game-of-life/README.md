@@ -1,24 +1,42 @@
-# The Magic Forest
+# Game of Life
 
 ## Task
-There are three species of animals in a magic forest: lions, wolves and goats. 
-Wolves can devour goats, and lions can devour wolves and goats. 
-("The stronger animal eats the weaker one".)  
-As this is a magic forest:
-* a wolf, after having devoured a goat, is transmuted into a lion; 
-* a lion, after having devoured a goat, is transmuted into a wolf; and
-* a lion having devoured a wolf becomes a goat.
+Write a program, which can simulate [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
+As input you get:
+* a text file of generation zero (there is no limit for the size [width x height])
+* the amount of generations to create
 
-At the very beginning, there are 17 goats, 55 wolves and 6 lions in the forest. 
-After every meal, there is one animal fewer than before; 
-therefore after some time, there is no devouring possible anymore.
+Example of input file:
+```
+........
+....*...
+...**...
+........
+```
+The process of creating a new generation is following these rules:
 
-What is the maximum number of animals who can live in the forest then?
+#### The Rules
+1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+2. Any live cell with two or three live neighbours lives on to the next generation.
+3. Any live cell with more than three live neighbours dies, as if by overpopulation.
+4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
-## Bonus
-Provide a devouring strategy leading to this number
+### Hint
+The next generation of the example from above would look like:
+```
+........
+...**...
+...**...
+........
+```
+
+## Result
+The result should be a output (terminal/File) of the last generation.
+
+### Bonus
+Show each generation as animated output (Slide-Show).
 
 ## Source
-http://unriskinsight.blogspot.com/2014/04/goats-wolves-and-lions.html
+http://codingdojo.org/kata/GameOfLife/
 
-Problem descriptions by [mwttg](https://github.com/mwttg/code-katas-scala/tree/master/kata_2019-11-magic-forest).
+Problem descriptions by [mwttg](https://github.com/mwttg/code-katas-scala/blob/master/kata_2019-09-game-of-life/readme.md).
