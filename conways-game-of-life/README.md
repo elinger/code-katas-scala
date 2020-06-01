@@ -2,7 +2,7 @@
 
 ## Task
 Write a program, which can simulate [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
-As input you get:
+As an input you get:
 * a text file of generation zero (there is no limit for the size [width x height])
 * the amount of generations to create
 

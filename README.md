@@ -9,6 +9,7 @@ This repository is a collection of some code-katas solved with Scala. The collec
 | [Roman numerals](roman-numerals/README.md)                          |
 | [Magic forest](magic-forest/README.md)                              |
 | [I before E except after C](i-before-e-except-after-c/README.md)    |
+| [Conway's game of life](conways-game-of-life/README.md)             |
 
 
 ## How to run
