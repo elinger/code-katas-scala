@@ -26,6 +26,14 @@ lazy val `magic-forest` = (project in file("magic-forest"))
   .settings(commonSettings)
   .enablePlugins(GraalVMNativeImagePlugin)
 
+lazy val `conways-game-of-life` = (project in file("conways-game-of-life"))
+  .settings(commonSettings)
+  .settings(
+    Seq(
+      libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.1.1"
+    )
+  )
+  .enablePlugins(GraalVMNativeImagePlugin)
 
 lazy val `i-before-e-except-after-c` = (project in file("i-before-e-except-after-c"))
   .settings(commonSettings)
