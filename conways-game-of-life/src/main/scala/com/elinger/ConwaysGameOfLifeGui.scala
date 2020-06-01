@@ -3,7 +3,7 @@ package com.elinger
 import com.elinger.ConwaysGameOfLife._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.swing.{BoxPanel, Dimension, Font, Label, MainFrame, Orientation, SimpleSwingApplication, TextPane}
+import scala.swing.{BoxPanel, Font, Label, MainFrame, Orientation, SimpleSwingApplication, TextPane}
 
 object ConwaysGameOfLifeGui extends SimpleSwingApplication {
 
@@ -21,13 +21,6 @@ object ConwaysGameOfLifeGui extends SimpleSwingApplication {
     centerOnScreen()
     pack()
   }
-
-  //val stateAsString: String =
-  //  """.............
-  //    |.......*.....
-  //    |......**.....
-  //    |.............
-  //    |""".stripMargin
 
   val stateAsString: String =
     """..*..........
