@@ -10,7 +10,7 @@ object ConwaysGameOfLife {
     val Dead, Alive = Value
   }
 
-  case class State(grid: Array[Array[Cell]], m: Int, n: Int)
+  case class State(grid: IndexedSeq[IndexedSeq[Cell]], m: Int, n: Int)
 
   def play(states: List[State], endIteration: Int): List[State] = {
 
@@ -28,18 +28,15 @@ object ConwaysGameOfLife {
   }
 
   private def evolve(state: State) = {
-    val newGrid = Array.ofDim[Cell](state.m, state.n)
-    for (i <- 0 until state.m) {
-      for (j <- 0 until state.n) {
+    val newGrid =
+      IndexedSeq.tabulate(state.m, state.n)((i, j) => {
         val numAliveNeighbours = countAliveNeighbours(state, i, j)
         state.grid(i)(j) match {
-          case Cell.Dead if numAliveNeighbours == 3 => newGrid(i)(j)                             = Cell.Alive
-          case Cell.Alive if numAliveNeighbours == 2 || numAliveNeighbours == 3 => newGrid(i)(j) = Cell.Alive
-          case _ => newGrid(i)(j) = Cell.Dead
+          case Cell.Dead if numAliveNeighbours == 3 => Cell.Alive
+          case Cell.Alive if numAliveNeighbours == 2 || numAliveNeighbours == 3 => Cell.Alive
+          case _ => Cell.Dead
         }
-      }
-    }
-
+      })
     State(newGrid, state.m, state.n)
   }
 
@@ -62,7 +59,7 @@ object ConwaysGameOfLife {
   def convertToState(stateAsString: String): State = {
     val grid = stateAsString
       .split("\n")
-      .map(line => line.map(c => if (c == '*') Cell.Alive else Cell.Dead).toArray)
+      .map(line => line.map(c => if (c == '*') Cell.Alive else Cell.Dead))
     State(grid, grid.length, grid(0).length)
   }
 
@@ -75,7 +72,7 @@ object ConwaysGameOfLife {
     val stateAsString =
       """.*...........
         |**.....*.....
-        |......**.....
+        |.*....**.....
         |.............
         |""".stripMargin
 
