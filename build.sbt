@@ -6,8 +6,9 @@ scalaVersion := "2.13.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.1",
-  libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.8",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+  libraryDependencies += "org.scalactic"    %% "scalactic" % "3.0.8",
+  libraryDependencies += "org.scalatest"    %% "scalatest" % "3.0.8" % "test",
+  libraryDependencies += "com.google.guava" % "guava"      % "29.0-jre",
 )
 
 lazy val `word-chain` = (project in file("word-chain"))
@@ -36,4 +37,7 @@ lazy val `conways-game-of-life` = (project in file("conways-game-of-life"))
   .enablePlugins(GraalVMNativeImagePlugin)
 
 lazy val `i-before-e-except-after-c` = (project in file("i-before-e-except-after-c"))
+  .settings(commonSettings)
+
+lazy val `abc-blocks` = (project in file("abc-blocks"))
   .settings(commonSettings)
