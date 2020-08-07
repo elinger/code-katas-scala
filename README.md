@@ -11,6 +11,7 @@ This repository is a collection of some code-katas solved with Scala. The collec
 | [I before E except after C](i-before-e-except-after-c/README.md)    |
 | [Conway's game of life](conways-game-of-life/README.md)             |
 | [ABC blocks](abc-blocks/README.md)                                  |
+| [Marble maze](marble-maze/README.md)                                |
 
 
 ## How to run

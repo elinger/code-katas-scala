@@ -42,5 +42,5 @@ lazy val `i-before-e-except-after-c` = (project in file("i-before-e-except-after
 lazy val `abc-blocks` = (project in file("abc-blocks"))
   .settings(commonSettings)
 
-lazy val `marbles` = (project in file("marbles"))
+lazy val `marble-maze` = (project in file("marble-maze"))
   .settings(commonSettings)

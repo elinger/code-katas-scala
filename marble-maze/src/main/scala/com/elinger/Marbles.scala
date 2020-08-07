@@ -2,20 +2,20 @@ package com.elinger
 
 import scala.io.Source
 
-trait MazeOps {
+trait MarbleMazeOps {
 
   type Grid = Seq[Seq[Boolean]]
   final case class Maze(r: Int, c: Int, grid: Grid) {
     def isEmpty(ri: Int)(ci: Int): Boolean = !grid(ri)(ci)
   }
 
-  def findInputs(maze: Maze): Set[Int] =
-    maze.grid.headOption.map(row => findHoles(row.toList)).getOrElse(Set.empty)
+  def findInputs(maze: Maze): Seq[Int] =
+    maze.grid.headOption.map(row => findHoles(row)).getOrElse(Seq.empty)
 
-  def findOutputs(maze: Maze): Set[Int] =
-    maze.grid.reverse.headOption.map(row => findHoles(row.toList)).getOrElse(Set.empty)
+  def findOutputs(maze: Maze): Seq[Int] =
+    maze.grid.reverse.headOption.map(row => findHoles(row)).getOrElse(Seq.empty)
 
-  def findHoles(list: List[Boolean]): Set[Int] = list.zipWithIndex.filterNot(t => t._1).map(t => t._2).toSet
+  def findHoles(row: Seq[Boolean]): Seq[Int] = row.zipWithIndex.filterNot(t => t._1).map(t => t._2)
 
   def isEmpty(maze: Maze): Boolean = maze.r == 0 || maze.c == 0
 
@@ -43,14 +43,14 @@ trait MazeOps {
    * @return input, outputs
    */
   def findAllInputOutputs(maze: Maze): Set[(Int, Set[Int])] =
-    findInputs(maze).map(input => (input, findOutputs(input, maze)))
+    findInputs(maze).map(input => (input, findOutputs(input, maze))).toSet
 
   def findOutputs(input: Int, maze: Maze): Set[Int]
 }
 
 object MarblesApp {
   def main(args: Array[String]): Unit = {
-    val mazeOps = MazeOpsStrategyA
+    val mazeOps = MarbleMazeOpsStrategyA
     val maze = mazeOps.parseInput("maze7.txt")
     println(mazeOps.toString(maze))
     println(mazeOps.findInputs(maze).mkString(" "))

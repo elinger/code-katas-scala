@@ -1,7 +1,7 @@
 package com.elinger
 import scala.collection.mutable
 
-object MazeOpsStrategyA extends MazeOps {
+object MarbleMazeOpsStrategyA extends MarbleMazeOps {
 
   def findOutputs(input: Int, maze: Maze): Set[Int] = {
     // cache for situation like this:

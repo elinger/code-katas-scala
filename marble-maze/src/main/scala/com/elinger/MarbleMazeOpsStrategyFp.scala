@@ -2,9 +2,12 @@ package com.elinger
 
 import scala.annotation.tailrec
 
-object MazeOpsStrategyFp extends MazeOps {
+/**
+ * Inspired by https://github.com/mwttg/code-katas-scala/tree/master/kata_2020-07-marble-maze
+ */
+object MarbleMazeOpsStrategyFp extends MarbleMazeOps {
 
-  override def findOutputs(input: Int, maze: MazeOpsStrategyFp.Maze): Set[Int] = {
+  override def findOutputs(input: Int, maze: MarbleMazeOpsStrategyFp.Maze): Set[Int] = {
 
     /**
       *
