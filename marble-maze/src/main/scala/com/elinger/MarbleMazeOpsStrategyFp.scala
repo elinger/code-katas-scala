@@ -7,7 +7,7 @@ import scala.annotation.tailrec
  */
 object MarbleMazeOpsStrategyFp extends MarbleMazeOps {
 
-  override def findOutputs(input: Int, maze: MarbleMazeOpsStrategyFp.Maze): Set[Int] = {
+  override def findOutputs(input: Int, maze: Maze): Set[Int] = {
 
     /**
       *
