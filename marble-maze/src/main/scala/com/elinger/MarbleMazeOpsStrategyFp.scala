@@ -41,7 +41,7 @@ object MarbleMazeOpsStrategyFp extends MarbleMazeOps {
 
   def findRight(inputs: Seq[Int], row: Int, maze: Maze): Seq[Int] = {
     // Make pairs and search between. E.g., for the following inputs 3, 8, 10 and maze width 12 we would
-    // get the following pairs (3, 8), (8, 10), (10, 12) and search only between starting from left to right.
+    // get the following pairs (3, 8), (8, 10), (10, 12) and we search only in between starting from left to right.
     // This will guarantee that we spend O(width).
     ((inputs :+ maze.c) zip (inputs :+ maze.c).tail)
       .flatMap{t =>
@@ -55,7 +55,7 @@ object MarbleMazeOpsStrategyFp extends MarbleMazeOps {
 
   def findLeft(inputs: Seq[Int], row: Int, maze: Maze): Seq[Int] = {
     // Make pairs and search between. E.g., for the following inputs 3, 8, 10,
-    // we get the following pairs (0, 8), (3, 8), (8, 10), (10, 12) and search only between from right to left.
+    // we get the following pairs (0, 3), (3, 8), (8, 10), and we search only in between starging from right to left.
     // This will guarantee that we spend O(width).
     ((Seq(0) ++ inputs) zip (Seq(0) ++ inputs).tail)
       .flatMap{t =>
